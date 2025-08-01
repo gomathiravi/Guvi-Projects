@@ -26,10 +26,7 @@ class PlacementsData(BaseData):
     def generate_data(self):
         ids = self.generate_id()
         self.data = []
-
         default_date = dt.strptime(DEFAULT_DATE_STR, '%m-%d-%Y').date()
-        print(type(default_date))
-        print(default_date)  # printed in default format
 
         for i in range(self.num_data):
             placement_status = np.random.choice(["Ready", "Not Ready", "Placed"])
