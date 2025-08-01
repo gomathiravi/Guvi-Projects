@@ -1,6 +1,24 @@
 from base_data import BaseData, fake, np
 
+students_table = (
+        "CREATE TABLE IF NOT EXISTS Students ("
+            "student_id VARCHAR(3) PRIMARY KEY,"
+            "name VARCHAR(100),"
+            "age INT,"
+            "gender VARCHAR(10),"
+            "email VARCHAR(100),"
+            "phone VARCHAR(20),"
+            "enrollment_year INT,"
+            "course_batch VARCHAR(50),"
+            "city VARCHAR(50),"
+            "graduation_year INT"
+            ");"
+        )
+
 class StudentsData(BaseData):
+    def __init__(self):
+        super().__init__("students", students_table)
+
     def generate_data(self):
         course_batches = ['Aws', 'Angular', 'Game Development', 'Full Stack Development', 'Dev Ops', 'Data Science', 'Cloud Computing', 'Cyber Security', 'Data Bases', 'Business Management' ]
         genders = ['Male', 'Female', 'Other']

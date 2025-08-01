@@ -1,8 +1,22 @@
-from base_data import BaseData, fake, np
+from base_data import BaseData, np
+
+programming_table = (
+    "CREATE TABLE IF NOT EXISTS Programming ("
+        "programming_id VARCHAR(3) PRIMARY KEY,"
+        "student_id VARCHAR(3),"
+        "language VARCHAR(20),"
+        "problems_solved INT,"
+        "assessments_completed INT,"
+        "mini_projects INT,"
+        "certifications_earned INT,"
+        "latest_project_score INT,"
+        "FOREIGN KEY (student_id) REFERENCES students(student_id)"
+        ");"
+    )
 
 class ProgrammingData(BaseData):
     def __init__(self, student_ids):
-        super().__init__(len(student_ids))
+        super().__init__("programming", programming_table, len(student_ids))
         self.student_ids = student_ids
 
     def generate_data(self):
