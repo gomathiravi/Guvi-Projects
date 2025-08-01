@@ -2,6 +2,7 @@ from students_data import StudentsData
 from programming_data import ProgrammingData
 from soft_skills_data import SoftSkillsData
 from placements_data import PlacementsData
+from placement_ui import PlacementUi as UI
 
 # create Students data
 students = StudentsData()
@@ -26,3 +27,6 @@ placements = PlacementsData(student_ids)
 placements.generate_data()
 placements_file_path = placements.save_to_file("placements")
 placements.store_data_in_db()
+
+app = UI()
+app.launch_ui()

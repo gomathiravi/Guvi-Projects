@@ -13,8 +13,6 @@ class BaseDatabase:
         self.cursor = self.connection.cursor()
         print("My SQL Connection Established")
         self.cursor.execute("CREATE DATABASE IF NOT EXISTS pes_db;")
-        # self.cursor.close()
-        # self.connection.close()
 
         # check if database exists
         # self.cursor.execute("SHOW DATABASES")
@@ -38,7 +36,7 @@ class BaseDatabase:
         cols = ",".join(df.columns)
         placeholders = ",".join(["%s"] * len(df.columns))
 
-        for _, row in df.iterrows():
+        for _ , row in df.iterrows():
             sql_stmt = f"INSERT INTO {table_name} ({cols}) VALUES ({placeholders})"
             print(row)
             self.cursor.execute(sql_stmt, tuple(row))
@@ -46,3 +44,12 @@ class BaseDatabase:
         self.connection.commit()
         print(f"Uploaded data to {table_name}")
 
+    def run_query(self, query):
+        self.cursor.execute("USE pes_db")
+        df = pd.read_sql(query, self.connection)
+        return df
+
+    def close_db(self):
+        print("...... base_data_base::close_db().........")
+        self.cursor.close()
+        self.connection.close()
