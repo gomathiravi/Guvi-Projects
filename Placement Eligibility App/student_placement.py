@@ -17,19 +17,19 @@ st.set_page_config(page_title="Students Placement Data Analysis", layout="wide")
 
 # Sidebar for navigation
 st.sidebar.title("Navigation")
-page = st.sidebar.radio("Go to", ["Project Introduction", "Student Data Visualization", "Student Placement Insight"])
+page = st.sidebar.radio("Go to", ["Project Brief", "Student Data Visualization", "Student Placement Insight"])
 
 # -------------------------------- PAGE 1: Page Introduction --------------------------------
-if page == "Project Introduction":
-    st.title("Student Data Analysis")
+if page == "Project Brief":
+    st.title("Placement Eligibility Application Introduction")
     st.subheader(" An App for Exploring Students Data For Placements")
     st.write("""
     This project helps view data of all the students enrolled.
-    It provides to view students information with various parameters i.e: their programming skills, scores, soft skills, placement eligibility.
+    It provides to view students information with various parameters i.e: their programming skills, scores, soft skills and placement eligibility.
 
     **Features:**
     - View and filter student data by city, batch, or scores.
-    - Generate dynamic visualizations for multiple programming and soft skill features.
+    - Generate dynamic visualisations for multiple programming and soft skill features.
     - Run predefined SQL queries to explore insights.
 
     **Database Used:** `students_db`
