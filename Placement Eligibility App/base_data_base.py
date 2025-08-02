@@ -9,22 +9,15 @@ DB_CONFIG = {
 
 class BaseDatabase:
     def __init__(self):
+        self.database_name = "students_db"
         self.connection = sql.connect(**DB_CONFIG)
         self.cursor = self.connection.cursor()
-        print("My SQL Connection Established")
-        self.cursor.execute("CREATE DATABASE IF NOT EXISTS pes_db;")
-
-        # check if database exists
-        # self.cursor.execute("SHOW DATABASES")
-        # databases = self.cursor.fetchall()
-        # for db in databases:
-        #     if 'pes_db' in db:
-        #         print (f"Database {db} exists")
-        #         break
+        print(f"My SQL Connection Established with data base: {self.database_name}")
+        self.cursor.execute(f"CREATE DATABASE IF NOT EXISTS {self.database_name};")
 
     def create_table(self, table_name, table_columns):
         try:
-            self.cursor.execute("USE pes_db")
+            self.cursor.execute(f"USE {self.database_name}")
             self.cursor.execute(table_columns)
             self.connection.commit()
             print(f"Table `{table_name}` created successfully")
@@ -45,7 +38,9 @@ class BaseDatabase:
         print(f"Uploaded data to {table_name}")
 
     def run_query(self, query):
-        self.cursor.execute("USE pes_db")
+        if query == "":
+            return pd.DataFrame({})
+        self.cursor.execute(f"USE {self.database_name}")
         df = pd.read_sql(query, self.connection)
         return df
 

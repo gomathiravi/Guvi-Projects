@@ -30,7 +30,7 @@ class PlacementsData(BaseData):
 
         for i in range(self.num_data):
             placement_status = np.random.choice(["Ready", "Not Ready", "Placed"])
-            company = fake.company() if placement_status == "Placed" else "Unknown"
+            company = fake.company() if placement_status == "Placed" else "Not Placed"
             package = round(np.random.uniform(40000, 120000), 2) if placement_status == "Placed" else 0
             date = fake.date_between(start_date='-1y', end_date='today') if placement_status == "Placed" else default_date
 

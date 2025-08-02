@@ -7,7 +7,7 @@ import os
 fake = Faker(locale='en_IN')
 
 class BaseData(BaseDatabase):
-    def __init__(self, table_name, table_columns, num_data=10):
+    def __init__(self, table_name, table_columns, num_data=200):
         super().__init__()
         self.num_data = num_data
         self.data = []

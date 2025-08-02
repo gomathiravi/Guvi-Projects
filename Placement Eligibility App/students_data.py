@@ -46,6 +46,3 @@ class StudentsData(BaseData):
 
         student_id_list = [row['student_id'] for row in self.data]
         return student_id_list
-
-# course batch list : in another format
-# f"Batch-{np.random.choice(['A','B','C'])}-{years[i]}",

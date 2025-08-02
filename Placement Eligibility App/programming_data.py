@@ -20,7 +20,7 @@ class ProgrammingData(BaseData):
         self.student_ids = student_ids
 
     def generate_data(self):
-        langugages = ['Python', 'SQL', 'Java','C++']
+        langugages = ['Python', 'SQL', 'Java', 'C', 'C Sharp', 'JScript', 'Typescript']
 
         # Generate random fields using NumPy
         langugages_list = np.random.choice(langugages, self.num_data)
@@ -30,7 +30,7 @@ class ProgrammingData(BaseData):
             "programming_id": ids[i],
             "student_id": self.student_ids[i],
             "language": langugages_list[i],
-            "problems_solved": np.random.randint(20, 200),
+            "problems_solved": np.random.randint(20, 300),
             "assessments_completed": np.random.randint(1, 10),
             "mini_projects": np.random.randint(0, 5),
             "certifications_earned": np.random.randint(0, 4),
