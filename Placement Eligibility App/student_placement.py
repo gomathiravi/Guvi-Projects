@@ -17,7 +17,7 @@ st.set_page_config(page_title="Students Placement Data Analysis", layout="wide")
 
 # Sidebar for navigation
 st.sidebar.title("Navigation")
-page = st.sidebar.radio("Go to", ["Project Introduction", "Student Data Visualization", "SQL Queries"])
+page = st.sidebar.radio("Go to", ["Project Introduction", "Student Data Visualization", "Student Placement Insight"])
 
 # -------------------------------- PAGE 1: Page Introduction --------------------------------
 if page == "Project Introduction":
@@ -107,8 +107,8 @@ elif page == "Student Data Visualization":
         st.warning("No data available for the selected filters.")
 
 # -------------------------------- PAGE 3: SQL Queries --------------------------------
-elif page == "SQL Queries":
-    st.title("SQL Query Results")
+elif page == "Student Placement Insight":
+    st.title("Student Placement Eligibility Insight")
 
     queries = {
         "1. Count of Students based on Placement status": "SELECT placement_status, COUNT(*) AS student_count FROM Placements GROUP BY placement_status;",
@@ -116,6 +116,10 @@ elif page == "SQL Queries":
         "3. Companies hire the most students and offer the highest packages": "SELECT company_name,COUNT(student_id) AS students_hired, MAX(placement_package) AS highest_package FROM Placements WHERE placement_status = 'Placed' GROUP BY company_name ORDER BY students_hired DESC, highest_package DESC;",
         "4. Correlate soft skill scores with placement outcomes": "SELECT p.placement_status, ROUND(AVG(s.communication), 2) AS avg_communication, ROUND(AVG(s.teamwork), 2) AS avg_teamwork, ROUND(AVG(s.presentation), 2) AS avg_presentation, ROUND(AVG(s.leadership), 2) AS avg_leadership, ROUND(AVG(s.critical_thinking), 2) AS avg_critical_thinking, ROUND(AVG(s.interpersonal_skills), 2) AS avg_interpersonal_skills FROM soft_skills s JOIN placements p ON s.student_id = p.student_id GROUP BY p.placement_status;",
         "5. Students with consistently high soft skill scores": "SELECT s.name AS student_name, ROUND((SS.communication + SS.teamwork + SS.presentation + SS.leadership + SS.critical_thinking + SS.interpersonal_skills) / 6.0, 2) AS avg_soft_skill_score FROM soft_skills SS JOIN Students s ON SS.student_id = s.student_id WHERE (SS.communication + SS.teamwork + SS.presentation + SS.leadership + SS.critical_thinking + SS.interpersonal_skills) / 6.0 >= 75 ORDER BY avg_soft_skill_score DESC;",
+        "6. Batch Placement overview": "SELECT s.course_batch, COUNT(p.student_id) AS students_placed, COUNT(s.student_id) AS total_students, ROUND(((COUNT(p.student_id)  * 100.0) / COUNT(s.student_id) ),2) AS placement_rate_percentage FROM Students s LEFT JOIN Placements p ON s.student_id = p.student_id AND p.placement_status = 'Placed' GROUP BY s.course_batch ORDER BY placement_rate_percentage DESC;",
+        "7. Skill to placement package ": "SELECT s.student_id, s.name, pl.mock_interview_score, pl.internships_completed, pg.language, pg.problems_solved, pg.latest_project_score, ss.communication, ss.teamwork, ss.leadership, ss.critical_thinking, pl.placement_package FROM Students s JOIN Placements pl ON s.student_id = pl.student_id JOIN Programming pg ON s.student_id = pg.student_id JOIN Soft_skills ss ON s.student_id = ss.student_id WHERE pl.placement_package IS NOT NULL ORDER BY pl.placement_package DESC;",
+        "8. Eligibily based on skill thresholds": "SELECT s.student_id, s.name, pg.latest_project_score, pg.problems_solved, ss.communication, ss.teamwork, ss.leadership, ss.critical_thinking, CASE WHEN pg.latest_project_score >= 80 AND pg.problems_solved >= 50 AND ss.communication >= 70 AND ss.teamwork >= 70 AND ss.leadership >= 60 AND ss.critical_thinking >= 60 THEN 'Eligible' ELSE 'Not Eligible' END AS eligibility_status FROM Students s JOIN Programming pg ON s.student_id = pg.student_id JOIN Soft_skills ss ON s.student_id = ss.student_id;",
+        "9. Mapping Placements rounds to scores, projects and soft skills": "SELECT s.student_id, s.name, pl.interview_rounds_cleared, pl.mock_interview_score, pl.internships_completed, pg.latest_project_score, pg.certifications_earned, ss.communication, ss.leadership, pl.placement_package FROM Students s JOIN Placements pl ON s.student_id = pl.student_id JOIN Programming pg ON s.student_id = pg.student_id JOIN Soft_skills ss ON s.student_id = ss.student_id WHERE pl.placement_status = 'Placed' ORDER BY pl.interview_rounds_cleared DESC;"
      }
 
     selected_query = st.selectbox("Choose a Query", list(queries.keys()))
