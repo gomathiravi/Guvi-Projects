@@ -9,7 +9,7 @@ def display_score_options():
     # Fetch latest_project_score
     df_project_score = db_object.run_query("SELECT DISTINCT latest_project_score FROM programming ORDER BY latest_project_score")
     latest_project_score = df_project_score["latest_project_score"].tolist()
-    st.write(latest_project_score)
+    # st.write(latest_project_score)
     return st.multiselect("Select Multiple Project scores", latest_project_score)
 
 # Streamlit App Title
@@ -78,16 +78,16 @@ elif page == "Student Data Visualization":
     elif filter_option == "Scores":
         query = ""
         latest_score_selected = display_score_options()
-        st.write(latest_score_selected)
+        # st.write(latest_score_selected)
         if len(latest_score_selected) != 0:
             latest_score_selected = sorted(latest_score_selected)
             max_score = latest_score_selected[len(latest_score_selected)-1]
-            st.write(f"{latest_score_selected[0]},{max_score}" )
+            # st.write(f"{latest_score_selected[0]},{max_score}" )
             query = f""" SELECT s.name, s.course_batch, pr.language, pr.problems_solved,
                 pr.assessments_completed, pr.mini_projects, pr.certifications_earned, pr.latest_project_score
                 FROM programming pr
                 JOIN students s ON s.student_id = pr.student_id
-                WHERE pr.latest_project_score BETWEEN {latest_score_selected[0]} AND {max_score};"""
+                WHERE pr.latest_project_score BETWEEN {latest_score_selected[0]} AND {max_score} AND s.course_batch = '{selected_batch}';"""
 
     elif filter_option == "Specific Year":
         selected_year = st.selectbox("Choose a Year", range(2015, 2025))
@@ -97,7 +97,7 @@ elif page == "Student Data Visualization":
         selected_city = st.selectbox("Select City", cities)
         query += f" AND city = '{selected_city}';"
 
-    st.write(query)
+    # st.write(query)
     df = db_object.run_query(query)
 
     if not df.empty:
@@ -119,11 +119,34 @@ elif page == "Student Placement Insight":
         "6. Batch Placement overview": "SELECT s.course_batch, COUNT(p.student_id) AS students_placed, COUNT(s.student_id) AS total_students, ROUND(((COUNT(p.student_id)  * 100.0) / COUNT(s.student_id) ),2) AS placement_rate_percentage FROM Students s LEFT JOIN Placements p ON s.student_id = p.student_id AND p.placement_status = 'Placed' GROUP BY s.course_batch ORDER BY placement_rate_percentage DESC;",
         "7. Skill to placement package ": "SELECT s.student_id, s.name, pl.mock_interview_score, pl.internships_completed, pg.language, pg.problems_solved, pg.latest_project_score, ss.communication, ss.teamwork, ss.leadership, ss.critical_thinking, pl.placement_package FROM Students s JOIN Placements pl ON s.student_id = pl.student_id JOIN Programming pg ON s.student_id = pg.student_id JOIN Soft_skills ss ON s.student_id = ss.student_id WHERE pl.placement_package IS NOT NULL ORDER BY pl.placement_package DESC;",
         "8. Eligibily based on skill thresholds": "SELECT s.student_id, s.name, pg.latest_project_score, pg.problems_solved, ss.communication, ss.teamwork, ss.leadership, ss.critical_thinking, CASE WHEN pg.latest_project_score >= 80 AND pg.problems_solved >= 50 AND ss.communication >= 70 AND ss.teamwork >= 70 AND ss.leadership >= 60 AND ss.critical_thinking >= 60 THEN 'Eligible' ELSE 'Not Eligible' END AS eligibility_status FROM Students s JOIN Programming pg ON s.student_id = pg.student_id JOIN Soft_skills ss ON s.student_id = ss.student_id;",
-        "9. Mapping Placements rounds to scores, projects and soft skills": "SELECT s.student_id, s.name, pl.interview_rounds_cleared, pl.mock_interview_score, pl.internships_completed, pg.latest_project_score, pg.certifications_earned, ss.communication, ss.leadership, pl.placement_package FROM Students s JOIN Placements pl ON s.student_id = pl.student_id JOIN Programming pg ON s.student_id = pg.student_id JOIN Soft_skills ss ON s.student_id = ss.student_id WHERE pl.placement_status = 'Placed' ORDER BY pl.interview_rounds_cleared DESC;"
-     }
-
+        "9. Mapping Placements rounds to scores, projects and soft skills": "SELECT s.student_id, s.name, pl.interview_rounds_cleared, pl.mock_interview_score, pl.internships_completed, pg.latest_project_score, pg.certifications_earned, ss.communication, ss.leadership, pl.placement_package FROM Students s JOIN Placements pl ON s.student_id = pl.student_id JOIN Programming pg ON s.student_id = pg.student_id JOIN Soft_skills ss ON s.student_id = ss.student_id WHERE pl.placement_status = 'Placed' ORDER BY pl.interview_rounds_cleared DESC;",
+        "10. Profile Per Student": "SELECT student_id, name FROM students"
+    }
     selected_query = st.selectbox("Choose a Query", list(queries.keys()))
     query_result = db_object.run_query(queries[selected_query])
 
-    st.write("### Query Result:")
-    st.dataframe(query_result, hide_index=True)
+    if selected_query == "10. Profile Per Student":
+        # st.write(selected_query)
+        selected_student_filter = st.selectbox("Select Student:", query_result["name"].tolist())
+        # st.write(selected_student_filter)
+        query = f""" SELECT s.student_id, s.name, s.age, s.gender, s.enrollment_year, s.graduation_year, s.course_batch, s.email, s.city,
+            pg.language, pg.problems_solved, pg.mini_projects, pg.certifications_earned, pg.latest_project_score,
+            ss.communication, ss.teamwork, ss.presentation, ss.leadership, ss.critical_thinking, ss.interpersonal_skills,
+            pl.mock_interview_score, pl.internships_completed, pl.placement_status, pl.company_name, pl.placement_package, pl.interview_rounds_cleared, pl.placement_date
+            FROM Students s
+            LEFT JOIN Programming pg ON s.student_id = pg.student_id
+            LEFT JOIN Soft_skills ss ON s.student_id = ss.student_id
+            LEFT JOIN Placements pl ON s.student_id = pl.student_id
+            WHERE s.name = '{selected_student_filter}';"""
+        # st.write(query)
+
+        df = db_object.run_query(query)
+        if not df.empty:
+            st.subheader(f"  {"Students Data: "}: {len(df)}")
+            st.dataframe(df, hide_index=True)
+        else:
+            st.warning("No data available for the selected filters.")
+
+    else:
+        # st.write("### Query Result:")
+        st.dataframe(query_result, hide_index=True)
