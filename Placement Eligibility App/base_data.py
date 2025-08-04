@@ -21,15 +21,17 @@ class BaseData(BaseDatabase):
 
     def save_to_file(self, file_name, folder='data'):
         self.file_path = os.path.join(folder, f"{file_name}.csv")
-        os.makedirs(folder, exist_ok=True)
+        if not os.path.exists(self.file_path):
+            os.makedirs(folder, exist_ok=True)
 
-        # load data into DataFrame object
-        df = pd.DataFrame(self.data)
-        # print(df)
+            # load data into DataFrame object
+            df = pd.DataFrame(self.data)
+            # print(df)
 
-        # write values to (csv) file
-        df.to_csv(self.file_path, index=False)
-        return self.file_path
+            # write values to (csv) file
+            df.to_csv(self.file_path, index=False)
+        else:
+            print(f"{self.file_path} already exists.")
 
     def store_data_in_db(self):
         self.save_to_db(self.file_path, self.table_name)
