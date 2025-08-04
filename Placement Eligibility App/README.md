@@ -40,11 +40,12 @@ All data classes inherit from BaseData, which handles:
 
 ### `main.py`
 - Entry point for Running the application
-- - **To create database**
+  - **To create database**
   - **generate student data**
   - **save the student data in <given filename> with .csv file**
   - **Create tables and store all the students in the given table name**
   - **Close the data base connection**
+  - **Launch the Streamlit Placement Eligibility User Interface**
 
 ### `student_placement.py`
 - Entry point to launch the User Interface using the streamlit Modules with the following main sections:
@@ -61,8 +62,8 @@ All data classes inherit from BaseData, which handles:
 ### `base_data.py`
 - Contains `BaseData` class derived from `BaseDatabase`:
   - Manages student metadata
-  - Provides functionality to save data to CSV
-  - Inserts data into the database
+  - Provides functionality to save data to data/<filename>.csv, if file does not exists
+  - calls functions to save data into the database
 
 ### `placements_data.py`
 - Contains `PlacementData` class extending `BaseData`
@@ -78,14 +79,14 @@ All data classes inherit from BaseData, which handles:
 
 ## Requirements
 
-- Python 3.8+
+- Python
 - Streamlit
 - pandas
-- sqlite3 (standard with Python)
+- mysql
 
 ## Usage
 
 Run the app using:
 
 ```bash
-streamlit run student_placement.py
+streamlit run main.py
