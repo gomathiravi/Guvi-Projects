@@ -35,37 +35,57 @@ All data classes inherit from BaseData, which handles:
     2. Gain insight into eligibility and placement factors
 
 
-****** Project Structure
-StudentPlacementApp/
-│
-├── student_placement.py         # Starts the Streamlit app with 3 main options:
-│                                # - Project Introduction
-│                                # - Student Data Visualization
-│                                # - SQL Queries
-│
-├── base_data_base.py            # Base class for database operations:
-│   └── class BaseDatabase       # - Initializes DB
-│                                # - Creates tables
-│                                # - Executes SQL queries
-│
-├── base_data.py                 # Base data handler derived from BaseDatabase:
-│   └── class BaseData           # - Holds student metadata
-│                                # - Saves data to CSV
-│                                # - Inserts into DB
-│
-├── main.py                      # Starts the application
-│                                # - creates a database
-│                                # - creates a the relevant tables
-│                                # - insert generated data into tables
-│
-├── placements_data.py
-│   └── class PlacementData(BaseData)
-│
-├── programming_data.py
-│   └── class ProgrammingData(BaseData)
-│
-├── soft_skills_data.py
-│   └── class SoftSkillsData(BaseData)
-│
-├── students_data.py
-│   └── class StudentsData(BaseData)
+### Project Structure
+## File Descriptions
+
+### `main.py`
+- Entry point for Running the application
+- - **To create database**
+  - **generate student data**
+  - **save the student data in <given filename> with .csv file**
+  - **Create tables and store all the students in the given table name**
+  - **Close the data base connection**
+
+### `student_placement.py`
+- Entry point to launch the User Interface using the streamlit Modules with the following main sections:
+  - **Project Introduction**
+  - **Student Data Visualization**
+  - **SQL Queries**
+
+### `base_data_base.py`
+- Contains `BaseDatabase` class:
+  - Initializes database
+  - Creates necessary tables
+  - Provides method for executing SQL queries
+
+### `base_data.py`
+- Contains `BaseData` class derived from `BaseDatabase`:
+  - Manages student metadata
+  - Provides functionality to save data to CSV
+  - Inserts data into the database
+
+### `placements_data.py`
+- Contains `PlacementData` class extending `BaseData`
+
+### `programming_data.py`
+- Contains `ProgrammingData` class extending `BaseData`
+
+### `soft_skills_data.py`
+- Contains `SoftSkillsData` class extending `BaseData`
+
+### `students_data.py`
+- Contains `StudentsData` class extending `BaseData`
+
+## Requirements
+
+- Python 3.8+
+- Streamlit
+- pandas
+- sqlite3 (standard with Python)
+
+## Usage
+
+Run the app using:
+
+```bash
+streamlit run student_placement.py
