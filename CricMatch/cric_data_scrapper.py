@@ -36,7 +36,7 @@ class Scrape_Data:
                 else:
                     print(f"Failed to download: {url}")
 
-    def extract_dt_dd_links(self):
+    def extract_links(self):
         # Find the dropdown list box using its class name: 'selectnav'
         listBox = self.driver.find_element(By.XPATH, "//select[@class='selectnav']")
         print(f"List Box: {listBox.text}")

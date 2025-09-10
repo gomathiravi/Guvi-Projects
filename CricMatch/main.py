@@ -10,7 +10,7 @@ if __name__ == "__main__":
 
     # Run the scrapper code to download cricket data set from the given web page
     scraper = Scraper(WEBPAGE_URL)
-    links = scraper.extract_dt_dd_links()
+    links = scraper.extract_links()
     scraper.download_files(links, DOWNLOAD_DIR)
     scraper.close_webDriver()
     print(f"All files downloaded to {DOWNLOAD_DIR}")
